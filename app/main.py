@@ -1,18 +1,16 @@
-import os
-
-
 def copy_file(command: str) -> None:
     parts = command.split()
-    if len(parts) != 3:
+    if len(parts) != 3 or parts[0] != "cp":
         return
-    if parts[0] != "cp":
+
+    source_file_name, destination_file_name = parts[1], parts[2]
+
+    if source_file_name == destination_file_name:
         return
-    source, target = parts[1], parts[2]
-    if not os.path.exists(source):
-        print(f"Файл {source} не існує")
-        return
-    if source == target:
-        return
-    with open(source, "r") as file_in, open(target, "w") as file_out:
-        content = file_in.read()
-        file_out.write(content)
+    try:
+        with (open(source_file_name, "rb") as file_in,
+              open(destination_file_name, "wb") as file_out):
+            content = file_in.read()
+            file_out.write(content)
+    except FileNotFoundError:
+        pass
